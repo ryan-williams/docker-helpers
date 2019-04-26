@@ -1,0 +1,25 @@
+
+dosh() {
+	if [ $# -eq 0 ]; then
+		#image=`docker ps | first | sl 1:2`
+		image="$(docker images -a | first | sl 1:2)"
+	else
+		image="$1"
+	fi
+	#docker exec -it "$image" bash
+	docker run -ti --entrypoint /bin/bash "$image"
+}
+export -f dosh
+
+defn dps docker ps
+defn dpsa docker ps -a
+defn dpsas docker ps -as
+defn dmg docker images
+defn dmgs docker images
+defn dols docker images
+
+defn drm docker rm
+defn drmi docker rmi
+
+defn dk docker
+
