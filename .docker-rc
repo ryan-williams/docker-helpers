@@ -2,7 +2,7 @@
 dosh() {
 	if [ $# -eq 0 ]; then
 		#image=`docker ps | first | sl 1:2`
-		image="$(docker images -a | first | sl 1:2)"
+		image="$(docker images -a | sl 1:2 | col 2)"
 	else
 		image="$1"
 	fi
