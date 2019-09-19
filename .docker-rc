@@ -1,12 +1,12 @@
 
+# Spawn a shell (/bin/bash) in the most recently-build Docker image (or an image passed as an argument)
 dosh() {
 	if [ $# -eq 0 ]; then
-		#image=`docker ps | first | sl 1:2`
-		image="$(docker images -a | sl 1:2 | col 2)"
+		image="$(docker images -a | head -n 2 | tail -n 1 | awk '{ print $3 }')"
+		echo "Using latest image: $image"
 	else
 		image="$1"
 	fi
-	#docker exec -it "$image" bash
 	docker run -ti --entrypoint /bin/bash "$image"
 }
 export -f dosh
