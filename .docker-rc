@@ -17,6 +17,10 @@ defn dpsas docker ps -as
 defn dmg docker images
 defn dmgs docker images
 defn dols docker images
+dlsh() {
+  dols | head "$@"
+}
+export -f dlsh
 
 defn drm docker rm
 defn drmi docker rmi
