@@ -27,3 +27,9 @@ defn drmi docker rmi
 
 defn dk docker
 
+aws_ecr_docker_login() {
+  eval `aws ecr get-login --no-include-email`
+}
+export -f aws_ecr_docker_login
+defn aedl aws_ecr_docker_login
+defn adl aws_ecr_docker_login
