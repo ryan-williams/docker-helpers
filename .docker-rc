@@ -1,15 +1,29 @@
 
 # Spawn a shell (/bin/bash) in the most recently-build Docker image (or an image passed as an argument)
-dosh() {
-	if [ $# -eq 0 ]; then
-		image="$(docker images -a | head -n 2 | tail -n 1 | awk '{ print $3 }')"
-		echo "Using latest image: $image"
-	else
-		image="$1"
-	fi
-	docker run -ti --entrypoint /bin/bash "$image"
+defn dosh docker run -it --entrypoint /bin/bash
+dshl() {
+  image="$(docker images -a | head -n 2 | tail -n 1 | awk '{ print $3 }')"
+  echo "Using latest image: $image"
+  dosh "$@" "$image"
 }
-export -f dosh
+export -f dshl
+
+dshc() {
+  if [ $# -eq 0 ]; then
+    container="$(docker ps | head -n 2 | tail -n 1 | awk '{ print $1 }')"
+    echo "Using latest container: $container"
+  else
+    container="$1"
+    shift
+    if ! docker ps | awk '{print $1}' | grep -q "$container"; then
+      echo "Container doesn't appear to be running; starting…"
+      docker start "$container"
+    fi
+  fi
+  docker exec -ti "$@" "$container" /bin/bash
+}
+export -f dshc
+defn dcsh dshc
 
 defn dps docker ps
 defn dpsa docker ps -a
@@ -17,10 +31,37 @@ defn dpsas docker ps -as
 defn dmg docker images
 defn dmgs docker images
 defn dols docker images
+defn dli docker images
 dlsh() {
   dols | head "$@"
 }
 export -f dlsh
+defn dlh dlsh
+defn dlih dlsh
+
+defn dcl docker container ls
+defn dcls docker container ls
+defn dca docker container ls -a
+defn dcla docker container ls -a
+dclh() {
+  if [[ "$1" =~ ^[0-9]+$ ]]; then
+    n="$1"; shift
+  else
+    n=10
+  fi
+  docker container ls "$@" | head -n "$n"
+}
+export -f dclh
+
+dcah() {
+  if [[ "$1" =~ ^[0-9]+$ ]]; then
+    n="$1"; shift
+  else
+    n=10
+  fi
+  docker container ls -a "$@" | head -n "$n"
+}
+export -f dcah
 
 defn drm docker rm
 defn drmi docker rmi
@@ -33,3 +74,14 @@ aws_ecr_docker_login() {
 export -f aws_ecr_docker_login
 defn aedl aws_ecr_docker_login
 defn adl aws_ecr_docker_login
+
+defn din docker inspect
+defn dis docker inspect
+defn dif docker inspect
+defn dns docker inspect
+
+defn drm docker rm
+defn drmi docker rmi
+
+defn dcan docker ps -a --filter ancestor=$img -q
+defn ddsc python docker_descendents.py
