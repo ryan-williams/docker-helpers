@@ -10,12 +10,18 @@ export -f dshl
 
 dshc() {
   if [ $# -eq 0 ]; then
-    container="$(docker ps | head -n 2 | tail -n 1 | awk '{ print $1 }')"
-    echo "Using latest container: $container"
+    container="$(docker ps '--format={{.ID}}' | head -n 1)"
+    if [ -z "$container" ]; then
+      container="$(docker container ls -l '--format={{.ID}}')"
+      echo "No running containers; starting most recent container: $container"
+      docker start "$container"
+    else
+      echo "Using first running container: $container"
+    fi
   else
     container="$1"
     shift
-    if ! docker ps | awk '{print $1}' | grep -q "$container"; then
+    if ! docker ps -a '--format={{.ID}} {{.Names}}' | grep -q "$container"; then
       echo "Container doesn't appear to be running; starting…"
       docker start "$container"
     fi
@@ -25,8 +31,19 @@ dshc() {
 export -f dshc
 defn dcsh dshc
 
+defn dbd docker-build.py
+defn dbf docker-build.py
+defn dbu docker-build.py
+
+defn mdi make-dockerignore.py
+
+defn dh docker help
 defn dps docker ps
+defn dpsi docker ps '--format={{.ID}}'
+defn dpsin docker ps '--format={{.ID}} {{.Names}}'
 defn dpsa docker ps -a
+defn dpsai docker ps -a '--format={{.ID}}'
+defn dpsain docker ps -a '--format={{.ID}} {{.Names}}'
 defn dpsas docker ps -as
 defn dmg docker images
 defn dmgs docker images
@@ -85,3 +102,7 @@ defn drmi docker rmi
 
 defn dcan docker ps -a --filter ancestor=$img -q
 defn ddsc python docker_descendents.py
+
+dce() {
+  docker container inspect "$@" &>/dev/null
+}
