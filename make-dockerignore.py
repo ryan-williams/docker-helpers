@@ -2,6 +2,11 @@
 #
 # Make a .dockerignore file that only accepts files currently tracked by Git
 #
+# Install:
+#
+#     curl -L https://bit.ly/install-make-dockerignore > ~/bin/make-dockerignore.py
+#     chmod ugo+x ~/bin/make-dockerignore.py
+#
 # See https://j.mp/make-dockerignore
 
 from argparse import ArgumentParser
