@@ -21,7 +21,7 @@ dshc() {
   else
     container="$1"
     shift
-    if ! docker ps -a '--format={{.ID}} {{.Names}}' | grep -q "$container"; then
+    if ! docker ps '--format={{.ID}} {{.Names}}' | grep -q "$container"; then
       echo "Container doesn't appear to be running; starting…"
       docker start "$container"
     fi
