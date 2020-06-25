@@ -74,3 +74,4 @@ with open('.dockerignore','w') as f:
     run(['git','ls-files']).decode().split('\n')
     if line
   ]
+  
