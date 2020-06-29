@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# usage: python3 docker_descendants.py <image_id> ...
+# usage: docker_purge.py [-v] [-n] <image_id> ...
 
 from dataclasses import dataclass
 import sys
