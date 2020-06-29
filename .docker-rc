@@ -84,6 +84,10 @@ defn drm docker rm
 defn drmi docker rmi
 
 defn dk docker
+defn dkc docker container
+defn dkcr docker container rm
+defn dki docker image
+defn dkir docker image rm
 
 aws_ecr_docker_login() {
   eval `aws ecr get-login --no-include-email`
