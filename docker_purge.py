@@ -2,9 +2,9 @@
 #
 # usage: docker_purge.py [-v] [-n] <image_id> ...
 
-from dataclasses import dataclass
-import sys
 from subprocess import check_output
+import sys
+
 
 def run(cmd):
     return check_output(cmd, universal_newlines=True).splitlines()
@@ -25,7 +25,6 @@ def docker_images(*args):
     return run(('docker', 'images') + args)
 
 
-@dataclass
 class Image:
     images = {}
     _initd = False
