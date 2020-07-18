@@ -25,6 +25,7 @@ else:
   if description == 0:
         description = 1
 
+import os.path
 from pathlib import Path
 import shlex
 from subprocess import check_output as run
@@ -37,9 +38,10 @@ with open('.dockerignore','w') as f:
   # Short URL for more info
   url = 'https://j.mp/make-dockerignore'
 
+  includes = []
+
   def comment(m): f.write(('# %s' % m).strip() + '\n')
   def exclude(p): f.write('%s\n' % p)
-  def include(p): f.write('!%s\n' % p)
 
   if description == 1:
     # Verbosity 1: small msg at top of .dockerignore file
@@ -68,15 +70,25 @@ with open('.dockerignore','w') as f:
 
   # maybe add the .git dir (useful for mounting the current working directory and having the git directory come along)
   if not no_git_dir:
-    include('.git')
+    includes += ['.git']
 
   f.flush()
 
   # un-exclude all git-tracked files
+  includes += run(['git','ls-files','--recurse-submodules']).decode().split('\n')
+
+  # maybe un-exclude git submodules' git "directories" (typically .git files that point into the parent repo's .git/modules directory)
+  if not no_git_dir:
+    includes += [
+      os.path.join(path,'.git')
+      for path in
+      run(['git','submodule','foreach','--recursive','--quiet','echo $displaypath']).decode().split('\n')
+    ]
+
+  includes = sorted(set(includes))
   [
-    include(line)
-    for line in
-    run(['git','ls-files']).decode().split('\n')
-    if line
+    f.write(f'!{include}\n')
+    for include in includes
+    if include
   ]
-  
+
