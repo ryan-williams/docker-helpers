@@ -2,7 +2,7 @@
 # Spawn a shell (/bin/bash) in the most recently-build Docker image (or an image passed as an argument)
 defn dosh docker run -it --entrypoint /bin/bash
 dshl() {
-  image="$(docker images -a | head -n 2 | tail -n 1 | awk '{ print $3 }')"
+  image="$(docker images | head -n 2 | tail -n 1 | awk '{ print $3 }')"
   echo "Using latest image: $image"
   dosh "$@" "$image"
 }
