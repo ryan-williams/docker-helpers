@@ -26,6 +26,7 @@ else:
         description = 1
 
 import os.path
+from os.path import exists
 from pathlib import Path
 import shlex
 from subprocess import check_output as run
@@ -84,6 +85,11 @@ with open('.dockerignore','w') as f:
       for path in
       run(['git','submodule','foreach','--recursive','--quiet','echo $displaypath']).decode().split('\n')
     ]
+
+  dockerinclude_path = '.dockerinclude'
+  if exists(dockerinclude_path):
+    with open(dockerinclude_path, 'r') as di:
+      includes += [ line.rstrip('\n') for line in di.readlines() ]
 
   includes = sorted(set(includes))
   [
