@@ -8,32 +8,82 @@ dshl() {
 }
 export -f dshl
 
-dshc() {
+docker_container_shell() {
   if [ $# -eq 0 ]; then
     container="$(docker ps '--format={{.ID}}' | head -n 1)"
     if [ -z "$container" ]; then
       container="$(docker container ls -l '--format={{.ID}}')"
-      echo "No running containers; starting most recent container: $container"
-      docker start "$container"
+      echo "No running containers; committing most recent container: $container"
+      docker commit "$container"
+      dshl
+      return $?
     else
       echo "Using first running container: $container"
+      docker exec -it "$container" /bin/bash
     fi
   else
     container="$1"
     shift
     if ! docker ps '--format={{.ID}} {{.Names}}' | grep -q "$container"; then
-      echo "Container doesn't appear to be running; starting…"
-      docker start "$container"
+      echo "Container doesn't appear to be running; committing then running…"
+      docker commit "$container"
+      dshl "$@"
+      return $?
+    else
+      docker exec -it "$container" /bin/bash
     fi
   fi
-  docker exec -ti "$@" "$container" /bin/bash
 }
-export -f dshc
-defn dcsh dshc
+export -f docker_container_shell
+defn dshc docker_container_shell
+defn dcsh docker_container_shell
 
 defn dbd docker-build.py
 defn dbf docker-build.py
 defn dbu docker-build.py
+defn dcp docker cp
+docker_stop() {
+  local all=
+  if [ "$1" == "-a" ]; then
+    all=1
+    shift
+    if [ $# -gt 0 ]; then
+      echo "Usage: $0 [-a | id...]" >&2
+      exit 1
+    fi
+  fi
+  if [ $# -gt 0 ]; then
+    for arg in "$@"; do
+      docker stop "$arg"
+    done
+  else
+    if [ -n "$all" ]; then
+      IFS=$'\n' read -d '' -r -a ids < <(docker ps --format={{.ID}})
+      if [ ${#ids[@]} -eq 0 ]; then
+        echo "No running containers found"
+      else
+        echo "Stopping ${#ids[@]} containers: ${ids[@]}"
+        for id in ${ids[@]}; do
+          echo "Stopping: ${id}"
+          docker stop "$id"
+        done
+      fi
+    else
+      latest="$(docker ps --format={{.ID}} | head -n 1)"
+      if [ -n "$latest" ]; then
+        echo "Stopping $latest"
+        docker stop "$latest"
+      else
+        echo "No running containers found"
+      fi
+    fi
+  fi
+}
+export -f docker_stop
+defn dst docker_stop
+defn dsp docker_stop
+defn dsta docker_stop -a
+defn dspa docker_stop -a
 
 defn mdi make-dockerignore.py
 
