@@ -1,6 +1,14 @@
 
+defn dre docker run -it --entrypoint
+defn drev docker run -it --entrypoint /usr/bin/env
+
 # Spawn a shell (/bin/bash) in the most recently-build Docker image (or an image passed as an argument)
-defn dosh docker run -it --entrypoint /bin/bash
+docker_shell() {
+  docker run -it --entrypoint /usr/bin/env "$@" bash
+}
+export -f docker_shell
+defn dosh docker_shell
+
 dshl() {
   image="$(docker images | head -n 2 | tail -n 1 | awk '{ print $3 }')"
   echo "Using latest image: $image"
@@ -19,7 +27,7 @@ docker_container_shell() {
       return $?
     else
       echo "Using first running container: $container"
-      docker exec -it "$container" /bin/bash
+      docker exec -it "$container" /usr/bin/env bash
     fi
   else
     container="$1"
@@ -30,13 +38,53 @@ docker_container_shell() {
       dshl "$@"
       return $?
     else
-      docker exec -it "$container" /bin/bash
+      echo "Shelling into running container"
+      docker exec -it "$container" /usr/bin/env bash
     fi
   fi
 }
 export -f docker_container_shell
 defn dshc docker_container_shell
 defn dcsh docker_container_shell
+
+docker_logs_last() {
+  container="$(docker container ls -l --format={{.ID}})"
+  echo "Showing logs for container $container"
+  docker logs "$@" "$container"
+}
+export -f docker_logs_last
+defn dkll docker_logs_last
+defn dkllf docker_logs_last -f
+defn dkl docker logs
+defn dklf docker logs -f
+
+defn dind docker run -v /var/run/docker.sock:/var/run/docker.sock
+
+docker_commit_running() {
+  container="$(docker ps '--format={{.ID}}' | head -n 1)"
+  if [ -n "$container" ]; then
+    echo "Committing first running container: $container"
+    docker commit "$container" "$@"
+  else
+    container="$(docker container ls -l '--format={{.ID}}')"
+    echo "No running containers; committing latest container '$container'"
+    if [ $# -gt 0 -a "${1::1}" == "-" ]; then
+      image="${@:(($#))}"
+      args=("${@:1:$(($#-1))}")
+      echo "image: $image"
+      echo "${#args[@]} args: ${args[@]}"
+      docker commit ${args[@]} "$container" "$image"
+    else
+      docker commit "$container" "$@"
+    fi
+  fi
+}
+export -f docker_commit_running
+defn dktr docker_commit_running
+defn dkt docker commit
+
+defn dkcl docker container ls
+defn dkcll docker container ls -l
 
 defn dbd docker-build.py
 defn dbf docker-build.py
