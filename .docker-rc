@@ -1,4 +1,5 @@
 
+defn dkr docker run
 defn dre docker run -it --entrypoint
 defn drev docker run -it --entrypoint /usr/bin/env
 
