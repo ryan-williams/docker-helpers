@@ -3,6 +3,9 @@ defn dkr docker run
 defn dre docker run -it --entrypoint
 defn drev docker run -it --entrypoint /usr/bin/env
 
+defn dks docker start
+defn dkt docker tag
+
 # Spawn a shell (/bin/bash) in the most recently-build Docker image (or an image passed as an argument)
 docker_shell() {
   docker run -it --entrypoint /usr/bin/env "$@" bash
@@ -81,8 +84,8 @@ docker_commit_running() {
   fi
 }
 export -f docker_commit_running
-defn dktr docker_commit_running
-defn dkt docker commit
+defn dkmr docker_commit_running
+defn dkm docker commit
 
 defn dkcl docker container ls
 defn dkcll docker container ls -l
@@ -129,6 +132,7 @@ docker_stop() {
   fi
 }
 export -f docker_stop
+defn dkp docker_stop
 defn dst docker_stop
 defn dsp docker_stop
 defn dsta docker_stop -a
