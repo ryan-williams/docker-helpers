@@ -1,10 +1,24 @@
 
-defn dkr docker run
-defn dre docker run -it --entrypoint
-defn drev docker run -it --entrypoint /usr/bin/env
+defn dk docker
+defn dh docker help
 
 defn dks docker start
 defn dkt docker tag
+
+defn dkx docker export
+defn dkxo docker export -o
+
+defn dcp docker cp
+
+## docker run ##
+
+defn dkr docker run
+defn dkri docker run -it
+defn dre docker run -it --entrypoint
+defn drev docker run -it --entrypoint /usr/bin/env
+defn dind docker run -v /var/run/docker.sock:/var/run/docker.sock
+
+## docker shell helpers ##
 
 # Spawn a shell (/bin/bash) in the most recently-build Docker image (or an image passed as an argument)
 docker_shell() {
@@ -51,6 +65,8 @@ export -f docker_container_shell
 defn dshc docker_container_shell
 defn dcsh docker_container_shell
 
+## docker logs ##
+
 docker_logs_last() {
   container="$(docker container ls -l --format={{.ID}})"
   echo "Showing logs for container $container"
@@ -62,7 +78,16 @@ defn dkllf docker_logs_last -f
 defn dkl docker logs
 defn dklf docker logs -f
 
-defn dind docker run -v /var/run/docker.sock:/var/run/docker.sock
+## docker volume ##
+
+defn dv docker volume
+defn dvc docker volume create
+defn dvi docker volume inspect
+defn dvl docker volume ls
+defn dvp docker volume prune
+defn dvr docker volume rm
+
+## docker commit ##
 
 docker_commit_running() {
   container="$(docker ps '--format={{.ID}}' | head -n 1)"
@@ -87,13 +112,8 @@ export -f docker_commit_running
 defn dkmr docker_commit_running
 defn dkm docker commit
 
-defn dkcl docker container ls
-defn dkcll docker container ls -l
+## docker stop ##
 
-defn dbd docker-build.py
-defn dbf docker-build.py
-defn dbu docker-build.py
-defn dcp docker cp
 docker_stop() {
   local all=
   if [ "$1" == "-a" ]; then
@@ -138,9 +158,8 @@ defn dsp docker_stop
 defn dsta docker_stop -a
 defn dspa docker_stop -a
 
-defn mdi make-dockerignore.py
+## docker ps ##
 
-defn dh docker help
 defn dps docker ps
 defn dpsi docker ps '--format={{.ID}}'
 defn dpsin docker ps '--format={{.ID}} {{.Names}}'
@@ -148,6 +167,17 @@ defn dpsa docker ps -a
 defn dpsai docker ps -a '--format={{.ID}}'
 defn dpsain docker ps -a '--format={{.ID}} {{.Names}}'
 defn dpsas docker ps -as
+defn dcan docker ps -a --filter ancestor=$img -q
+
+## docker image ##
+
+defn drm docker rm
+defn drmi docker rmi
+
+defn dki docker image
+defn dkii docker image inspect
+defn dkir docker image rm
+
 defn dmg docker images
 defn dmgs docker images
 defn dols docker images
@@ -159,10 +189,28 @@ export -f dlsh
 defn dlh dlsh
 defn dlih dlsh
 
-defn dcl docker container ls
-defn dcls docker container ls
+## docker inspect ##
+
+defn din docker inspect
+defn dis docker inspect
+defn dif docker inspect
+defn dns docker inspect
+
+## docker container ##
+
+defn dkc docker container
 defn dca docker container ls -a
+defn dkci docker container inspect
+dce() {
+  docker container inspect "$@" &>/dev/null
+}
+export -f dce
+defn dcl docker container ls
+defn dkcll docker container ls -l
 defn dcla docker container ls -a
+defn dcls docker container ls
+defn dkcm docker container rename
+defn dkcr docker container rm
 dclh() {
   if [[ "$1" =~ ^[0-9]+$ ]]; then
     n="$1"; shift
@@ -183,14 +231,7 @@ dcah() {
 }
 export -f dcah
 
-defn drm docker rm
-defn drmi docker rmi
-
-defn dk docker
-defn dkc docker container
-defn dkcr docker container rm
-defn dki docker image
-defn dkir docker image rm
+## misc scripts ##
 
 aws_ecr_docker_login() {
   eval `aws ecr get-login --no-include-email`
@@ -199,17 +240,9 @@ export -f aws_ecr_docker_login
 defn aedl aws_ecr_docker_login
 defn adl aws_ecr_docker_login
 
-defn din docker inspect
-defn dis docker inspect
-defn dif docker inspect
-defn dns docker inspect
-
-defn drm docker rm
-defn drmi docker rmi
-
-defn dcan docker ps -a --filter ancestor=$img -q
 defn ddsc python docker_descendents.py
+defn mdi make-dockerignore.py
 
-dce() {
-  docker container inspect "$@" &>/dev/null
-}
+defn dbd docker-build.py
+defn dbf docker-build.py
+defn dbu docker-build.py
