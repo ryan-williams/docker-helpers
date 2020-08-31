@@ -10,10 +10,14 @@ defn dkxo docker export -o
 
 defn dcp docker cp
 
+defn dkdf docker system df
+defn dkif docker system info
+
 ## docker run ##
 
 defn dkr docker run
 defn dkri docker run -it
+defn dkrip docker run -it -p
 defn dre docker run -it --entrypoint
 defn drev docker run -it --entrypoint /usr/bin/env
 defn dind docker run -v /var/run/docker.sock:/var/run/docker.sock
@@ -75,8 +79,8 @@ docker_logs_last() {
 export -f docker_logs_last
 defn dkll docker_logs_last
 defn dkllf docker_logs_last -f
-defn dkl docker logs
 defn dklf docker logs -f
+defn dklg docker logs
 
 ## docker volume ##
 
@@ -178,8 +182,10 @@ defn dki docker image
 defn dkii docker image inspect
 defn dkir docker image rm
 
+defn dkl docker images
 defn dmg docker images
 defn dmgs docker images
+defn dkls docker images
 defn dols docker images
 defn dli docker images
 dlsh() {
