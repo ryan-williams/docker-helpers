@@ -13,6 +13,11 @@ defn dcp docker cp
 defn dkdf docker system df
 defn dkif docker system info
 
+defn dkpl docker pull
+
+defn dkph docker push
+defn dkps docker push
+
 ## docker run ##
 
 defn dkr docker run
