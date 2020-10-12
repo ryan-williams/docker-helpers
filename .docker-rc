@@ -2,6 +2,12 @@
 defn dk docker
 defn dh docker help
 
+docker_help() {
+  docker "$@" --help
+}
+export -f docker_help
+defn dkh docker_help
+
 defn dks docker start
 defn dkt docker tag
 
@@ -222,6 +228,7 @@ defn dcla docker container ls -a
 defn dcls docker container ls
 defn dkcm docker container rename
 defn dkcr docker container rm
+defn dkrm docker container rm
 dclh() {
   if [[ "$1" =~ ^[0-9]+$ ]]; then
     n="$1"; shift
@@ -257,3 +264,5 @@ defn mdi make-dockerignore.py
 defn dbd docker-build.py
 defn dbf docker-build.py
 defn dbu docker-build.py
+
+defn dkpg docker_purge.py
