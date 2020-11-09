@@ -208,7 +208,10 @@ defn dlih dlsh
 
 ## docker inspect ##
 
+defn dkin docker inspect
+defn dkip docker inspect
 defn din docker inspect
+defn dip docker inspect
 defn dis docker inspect
 defn dif docker inspect
 defn dns docker inspect
