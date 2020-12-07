@@ -27,7 +27,9 @@ defn dkps docker push
 ## docker run ##
 
 defn dkr docker run
+defn dkrhw docker run -it --rm hello-world
 defn dkri docker run -it
+defn dkrr docker run -it --rm
 defn dkrip docker run -it -p
 defn dre docker run -it --entrypoint
 defn drev docker run -it --entrypoint /usr/bin/env
