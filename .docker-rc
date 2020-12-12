@@ -271,3 +271,23 @@ defn dbf docker-build.py
 defn dbu docker-build.py
 
 defn dkpg docker_purge.py
+
+
+docker_size() {
+  local human_readable=
+  if [ "$1" == "-h" ]; then
+    human_readable=1
+    args=("${@:2:$#}")
+  else
+    args=("$@")
+  fi
+  for arg in "${args[@]}"; do
+    size="$(docker inspect "$arg" | jq '.[0]|.Size')"
+    if [ "$human_readable" ]; then
+      numfmt --to=iec "$size"
+    else
+      echo "$size"
+    fi
+  done
+}
+defn dksz docker_size
