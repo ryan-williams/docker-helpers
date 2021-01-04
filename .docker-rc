@@ -102,6 +102,7 @@ defn dvc docker volume create
 defn dvi docker volume inspect
 defn dvl docker volume ls
 defn dvp docker volume prune
+defn dvpr docker volume prune
 defn dvr docker volume rm
 
 ## docker commit ##
@@ -291,3 +292,5 @@ docker_size() {
   done
 }
 defn dksz docker_size
+
+defn dkpr docker system prune
