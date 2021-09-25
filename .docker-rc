@@ -10,6 +10,8 @@ defn dkh docker_help
 
 defn dks docker start
 defn dkt docker tag
+defn dkv docker volume
+defn dka docker attach
 
 defn dkx docker export
 defn dkxo docker export -o
