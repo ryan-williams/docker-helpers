@@ -33,7 +33,8 @@ defn dkrhw docker run -it --rm hello-world
 defn dkri docker run -it
 defn dkrr docker run -it --rm
 defn dkrip docker run -it -p
-defn dre docker run -it --entrypoint
+defn dre docker run --entrypoint
+defn dri docker run -it --entrypoint
 defn drev docker run -it --entrypoint /usr/bin/env
 defn dind docker run -v /var/run/docker.sock:/var/run/docker.sock
 
@@ -181,6 +182,7 @@ defn dspa docker_stop -a
 ## docker ps ##
 
 defn dps docker ps
+defn dpss docker ps --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}'
 defn dpsi docker ps '--format={{.ID}}'
 defn dpsin docker ps '--format={{.ID}} {{.Names}}'
 defn dpsa docker ps -a
