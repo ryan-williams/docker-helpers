@@ -179,6 +179,8 @@ defn dsp docker_stop
 defn dsta docker_stop -a
 defn dspa docker_stop -a
 
+defn did image_digests.sh
+
 ## docker ps ##
 
 defn dps docker ps
