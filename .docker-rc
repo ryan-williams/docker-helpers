@@ -33,8 +33,11 @@ defn dkrhw docker run -it --rm hello-world
 defn dkri docker run -it
 defn dkrr docker run -it --rm
 defn dkrip docker run -it -p
-defn dre docker run --entrypoint
-defn dri docker run -it --entrypoint
+defn dre docker run --rm --entrypoint
+defn drek docker run --entrypoint
+defn docker_pip docker run -it --rm --entrypoint pip
+defn dri docker run --rm -it --entrypoint
+defn drik docker run -it --entrypoint
 defn drev docker run -it --entrypoint /usr/bin/env
 defn dind docker run -v /var/run/docker.sock:/var/run/docker.sock
 
@@ -45,7 +48,8 @@ docker_shell() {
   docker run -it --entrypoint /usr/bin/env "$@" bash
 }
 export -f docker_shell
-defn dosh docker_shell
+defn dosh docker_shell --rm
+defn dshk docker_shell
 
 dshl() {
   image="$(docker images | head -n 2 | tail -n 1 | awk '{ print $3 }')"
@@ -276,6 +280,7 @@ defn mdi make-dockerignore.py
 defn dbd docker-build.py
 defn dbf docker-build.py
 defn dbu docker-build.py
+defn db. docker-build.py
 
 defn dkpg docker_purge.py
 
