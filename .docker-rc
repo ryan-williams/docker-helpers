@@ -284,7 +284,6 @@ defn db. docker-build.py
 
 defn dkpg docker_purge.py
 
-
 docker_size() {
   local human_readable=
   if [ "$1" == "-h" ]; then
