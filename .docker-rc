@@ -28,7 +28,20 @@ defn dkps docker push
 
 ## docker run ##
 
-defn dkr docker run
+defn dkr docker run --rm
+defn dkrk docker run
+docker_run_mount_cwd() {
+    img="$1"; shift
+    docker run -v $PWD:/src -w /src --entrypoint bash "$img" -c "$@"
+}
+export -f docker_run_mount_cwd
+defn dkrvk docker_run_mount_cwd
+docker_run_mount_cwd_rm() {
+    img="$1"; shift
+    docker run -v $PWD:/src -w /src --entrypoint bash "$img" -c "$@"
+}
+export -f docker_run_mount_cwd_rm
+defn dkrv docker_run_mount_cwd_rm
 defn dkrhw docker run -it --rm hello-world
 defn dkri docker run -it
 defn dkrr docker run -it --rm
@@ -40,6 +53,15 @@ defn dri docker run --rm -it --entrypoint
 defn drik docker run -it --entrypoint
 defn drev docker run -it --entrypoint /usr/bin/env
 defn dind docker run -v /var/run/docker.sock:/var/run/docker.sock
+
+docker_run_commit() {
+    name="$1"; shift
+    docker run --name "$name" "$@" && \
+    docker commit "$name" "$name" && \
+    docker container rm "$name"
+}
+export -f docker_run_commit
+defn drk docker_run_commit
 
 ## docker shell helpers ##
 
@@ -302,5 +324,6 @@ docker_size() {
   done
 }
 defn dksz docker_size
+defn dksh docker_size -h
 
 defn dkpr docker system prune
