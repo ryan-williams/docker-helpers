@@ -49,8 +49,11 @@ defn dkrip docker run -it -p
 defn dre docker run --rm --entrypoint
 defn drek docker run --entrypoint
 defn docker_pip docker run -it --rm --entrypoint pip
-defn dri docker run --rm -it --entrypoint
-defn drik docker run -it --entrypoint
+defn dri docker run --rm -it
+defn drik docker run -it
+defn drie docker run --rm -it --entrypoint
+defn driek docker run -it --entrypoint
+defn drike docker run -it --entrypoint
 defn drev docker run -it --entrypoint /usr/bin/env
 defn dind docker run -v /var/run/docker.sock:/var/run/docker.sock
 
@@ -305,6 +308,28 @@ defn dbu docker-build.py
 defn db. docker-build.py
 
 defn dkpg docker_purge.py
+
+defn dmip docker manifest inspect
+defn dmi docker manifest inspect
+
+docker_manifest_size() {
+    local human_readable=
+    if [ "$1" == "-h" ]; then
+        human_readable=1
+        args=("${@:2:$#}")
+    else
+        args=("$@")
+    fi
+    size="$(docker manifest inspect "${args[@]}" | jq '[ .config.size ] + (. .layers|map(.size)) | add')"
+    if [ "$human_readable" ]; then
+        numfmt --to=iec "$size"
+    else
+        echo "$size"
+    fi
+}
+export -f docker_manifest_size
+defn dmsz docker_manifest_size
+defn dmsh docker_manifest_size -h
 
 docker_size() {
   local human_readable=
