@@ -352,3 +352,14 @@ defn dksz docker_size
 defn dksh docker_size -h
 
 defn dkpr docker system prune
+
+docker_tags() {
+    if [ $# -ne 1 ]; then
+        echo "Usage: docker_tags <img>" >&2
+        return 1
+    fi
+    img="$1"; shift
+    docker inspect "$img" | jq -r '.[0].RepoTags[]'
+}
+export -f docker_tags
+defn dkts docker_tags
