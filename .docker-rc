@@ -363,3 +363,15 @@ docker_tags() {
 }
 export -f docker_tags
 defn dkts docker_tags
+
+docker_pull_shell() {
+    if [ $# -ne 1 ]; then
+        echo "Usage: docker_pull_shell <img>" >&2
+        return 1
+    fi
+    img="$1"; shift
+    docker pull "$img"
+    docker_shell "$img"
+}
+export -f docker_pull_shell
+defn dpsh docker_pull_shell
