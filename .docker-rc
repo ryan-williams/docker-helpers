@@ -267,7 +267,10 @@ defn dcl docker container ls
 defn dkcll docker container ls -l
 defn dcla docker container ls -a
 defn dcls docker container ls
+defn dclsa docker container ls -a
+defn dkcl docker container ls
 defn dkcm docker container rename
+defn dcrm docker container rm
 defn dkcr docker container rm
 defn dkrm docker container rm
 dclh() {
@@ -279,6 +282,23 @@ dclh() {
   docker container ls "$@" | head -n "$n"
 }
 export -f dclh
+
+docker_image_copy() {
+    if [ $# -ne 3 ]; then
+        echo "Usage: docker_image_copy <image> <src> <dst>" >&2
+        return 1
+    fi
+    img="$1"; shift
+    src="$1"; shift
+    dst="$1"; shift
+    id="$(docker create "$img")"
+    docker cp "$id:$src" "$dst"
+    docker container rm "$id"
+}
+export -f docker_image_copy
+defn dic docker_image_copy
+defn dicp docker_image_copy
+defn dkic docker_image_copy
 
 dcah() {
   if [[ "$1" =~ ^[0-9]+$ ]]; then
