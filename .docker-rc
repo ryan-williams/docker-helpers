@@ -161,6 +161,7 @@ docker_commit_running() {
 export -f docker_commit_running
 defn dkmr docker_commit_running
 defn dkm docker commit
+defn dkct docker commit
 
 ## docker stop ##
 
