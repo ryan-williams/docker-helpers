@@ -373,6 +373,8 @@ defn dksz docker_size
 defn dksh docker_size -h
 
 defn dkpr docker system prune
+defn dkpra docker system prune -a
+defn dkpa docker system prune -a
 
 docker_tags() {
     if [ $# -ne 1 ]; then
