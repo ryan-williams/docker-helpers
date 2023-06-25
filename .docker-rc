@@ -70,7 +70,7 @@ defn drk docker_run_commit
 
 # Spawn a shell (/bin/bash) in the most recently-build Docker image (or an image passed as an argument)
 docker_shell() {
-  docker run -it --entrypoint /usr/bin/env "$@" bash
+  docker run -it --entrypoint /usr/bin/env "$@" bash --login
 }
 export -f docker_shell
 defn dosh docker_shell --rm
