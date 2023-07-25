@@ -130,7 +130,7 @@ defn dklg docker logs
 ## docker volume ##
 
 defn dv docker volume
-defn dvc docker volume create
+defn dkvc docker volume create
 defn dvi docker volume inspect
 defn dvl docker volume ls
 defn dvp docker volume prune
