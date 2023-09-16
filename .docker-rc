@@ -26,6 +26,9 @@ defn dkpl docker pull
 defn dkph docker push
 defn dkps docker push
 
+alias docker_rsync="rsync -e 'docker exec -i'"
+alias drsync="docker_rsync"
+
 ## docker run ##
 
 defn dkr docker run --rm
@@ -113,6 +116,12 @@ docker_container_shell() {
 export -f docker_container_shell
 defn dshc docker_container_shell
 defn dcsh docker_container_shell
+
+docker_last_container() {
+  docker ps '--format={{.ID}}' | head -n 1
+}
+export -f docker_last_container
+defn dklc docker_last_container
 
 ## docker logs ##
 
