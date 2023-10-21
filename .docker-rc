@@ -138,13 +138,13 @@ defn dklg docker logs
 
 ## docker volume ##
 
-defn dv docker volume
+defn dkv docker volume
 defn dkvc docker volume create
-defn dvi docker volume inspect
-defn dvl docker volume ls
-defn dvp docker volume prune
-defn dvpr docker volume prune
-defn dvr docker volume rm
+defn dkvi docker volume inspect
+defn dkvl docker volume ls
+defn dkvp docker volume prune
+defn dkvpr docker volume prune
+defn dkvr docker volume rm
 
 ## docker commit ##
 
