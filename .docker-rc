@@ -53,12 +53,21 @@ defn dre docker run --rm --entrypoint
 defn drek docker run --entrypoint
 defn docker_pip docker run -it --rm --entrypoint pip
 defn dri docker run --rm -it
+defn drin docker run -it --name
 defn drik docker run -it
 defn drie docker run --rm -it --entrypoint
 defn driek docker run -it --entrypoint
 defn drike docker run -it --entrypoint
 defn drev docker run -it --entrypoint /usr/bin/env
 defn dind docker run -v /var/run/docker.sock:/var/run/docker.sock
+
+docker_run_name_cwd() {
+    local name="$(basename "$PWD")"
+    docker container rm "$name" &>/dev/null
+    docker run -it --name "$name" "$@"
+}
+export -f docker_run_name_cwd
+defn drinc docker_run_name_cwd
 
 docker_run_commit() {
     name="$1"; shift
