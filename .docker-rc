@@ -303,6 +303,7 @@ dclh() {
 export -f dclh
 
 docker_image_copy() {
+    # Adapted from https://stackoverflow.com/a/31316636
     if [ $# -ne 3 ]; then
         echo "Usage: docker_image_copy <image> <src> <dst>" >&2
         return 1
