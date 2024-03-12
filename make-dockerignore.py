@@ -95,7 +95,7 @@ with open('.dockerignore', 'w') as f:
 
     includes = sorted(set(includes))
     [
-        f.write(f'!{include}\n')
+        f.write(f'!{include.replace("[", "[[]")}\n')
         for include in includes
         if include
     ]
