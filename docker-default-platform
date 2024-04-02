@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+if [ $# -eq 0 ]; then
+    echo ${DOCKER_DEFAULT_PLATFORM}
+else
+    docker_default_platform_set "$@"
+fi

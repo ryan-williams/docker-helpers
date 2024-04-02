@@ -440,13 +440,13 @@ install_docker_ubuntu() {
     docker run hello-world
 }
 
-docker_default_platform() {
+docker_default_platform_set() {
     if [ $# -eq 0 ]; then
         platform=linux/amd64
     elif [ $# -eq 1 ]; then
         platform="$1"; shift
     else
-        echo "Usage: $0 [platform=linux/amd64]" >&2
+        echo "Usage: docker_default_platform [platform=linux/amd64]" >&2
         return 1
     fi
     if [ "$DOCKER_DEFAULT_PLATFORM" == "$platform" ]; then
@@ -457,8 +457,10 @@ docker_default_platform() {
         else
             echo "Setting DOCKER_DEFAULT_PLATFORM=$platform" >&2
         fi
-        export "DOCKER_DEFAULT_PLATFORM=$platform"
+        export DOCKER_DEFAULT_PLATFORM="$platform"
     fi
 }
-export -f docker_default_platform
-defn ddp docker_default_platform
+export -f docker_default_platform_set
+defn ddps docker_default_platform_set
+
+alias ddp=". docker-default-platform"
