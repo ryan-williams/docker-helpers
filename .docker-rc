@@ -46,13 +46,14 @@ docker_run_mount_cwd_rm() {
 export -f docker_run_mount_cwd_rm
 defn dkrv docker_run_mount_cwd_rm
 defn dkrhw docker run -it --rm hello-world
-defn dkri docker run -it
-defn dkrr docker run -it --rm
-defn dkrip docker run -it -p
+defn dkri docker-run.py -k
+defn dkrr docker-run.py
+defn dkrip docker-run.py -kp
 defn dre docker run --rm --entrypoint
 defn drek docker run --entrypoint
 defn docker_pip docker run -it --rm --entrypoint pip
-defn dri docker run --rm -it
+defn dri docker-run.py
+defn drip docker-run.py -p
 defn drin docker run -it --name
 defn drik docker run -it
 defn drie docker run --rm -it --entrypoint
@@ -88,10 +89,16 @@ export -f docker_shell
 defn dosh docker_shell --rm
 defn dshk docker_shell
 
+docker_last_tagged_image() {
+    docker image ls --format '{{.Repository}}:{{.Tag}}' '*:*' | head -n1
+}
+export -f docker_last_tagged_image
+defn dlti docker_last_tagged_image
+
 dshl() {
   image="$(docker images | head -n 2 | tail -n 1 | awk '{ print $3 }')"
   echo "Using latest image: $image"
-  dosh "$@" "$image"
+  docker_shell "$@" "$image"
 }
 export -f dshl
 
