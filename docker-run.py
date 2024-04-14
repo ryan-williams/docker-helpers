@@ -41,7 +41,7 @@ def main(env_files, non_interactive, keep, name, ports, args):
     err(f"{args=}, {opt_args=}")
     img = None
     if args:
-        img, args = args
+        img, *args = args
 
     entrypoint = None
     if args:
