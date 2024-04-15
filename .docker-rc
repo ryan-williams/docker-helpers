@@ -471,3 +471,4 @@ export -f docker_default_platform_set
 defn ddps docker_default_platform_set
 
 alias ddp=". docker-default-platform"
+alias ddpus="unset DOCKER_DEFAULT_PLATFORM"
