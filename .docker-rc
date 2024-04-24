@@ -133,6 +133,9 @@ export -f docker_container_shell
 defn dshc docker_container_shell
 defn dcsh docker_container_shell
 
+defn dcx docker container exec -it
+defn dkx docker container exec -it
+
 docker_last_container() {
   docker ps '--format={{.ID}}' | head -n 1
 }
