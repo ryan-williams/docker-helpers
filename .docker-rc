@@ -17,6 +17,7 @@ defn dkx docker export
 defn dkxo docker export -o
 
 defn dcp docker cp
+defn dkcp docker cp
 
 defn dkdf docker system df
 defn dkif docker system info
@@ -259,6 +260,15 @@ defn drmi docker rmi
 defn dki docker image
 defn dkii docker image inspect
 defn dkir docker image rm
+
+docker_container_memory_usage() {
+    docker stats --no-stream --format '{{.MemUsage}}' "$@"
+}
+export -f docker_container_memory_usage
+defn dcm docker_container_memory_usage
+defn dmu docker_container_memory_usage
+defn dcmu docker_container_memory_usage
+defn dkmu docker_container_memory_usage
 
 defn dkl docker images
 defn dmg docker images
