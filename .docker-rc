@@ -134,7 +134,8 @@ export -f docker_container_shell
 defn dshc docker_container_shell
 defn dcsh docker_container_shell
 
-defn dcx docker container exec -it
+defn dci docker container exec -it
+defn dcx docker container exec
 defn dkx docker container exec -it
 
 docker_last_container() {
