@@ -1,24 +1,26 @@
 #!/usr/bin/env python
 import shlex
+from functools import partial
+from os import getcwd
+from os.path import basename
 from re import fullmatch
 from subprocess import check_output, Popen, check_call
 
-import click
-from click import UNPROCESSED
+from click import argument, command, echo, option, UNPROCESSED
 
 
-def err(msg):
-    click.echo(msg, err=True)
+err = partial(echo, err=True)
 
 
-@click.command(context_settings=dict(ignore_unknown_options=True))
-@click.option('-E', '--env-file', 'env_files', multiple=True, help='Environment files')
-@click.option('-I', '--non-interactive', is_flag=True, help='Non-interactive mode (disable passing `-it`)')
-@click.option('-k', '--keep', is_flag=True, help='Keep container after it exits (disable passing `--rm`)')
-@click.option('-n', '--name', help='Container name')
-@click.option('-p', '--port', 'ports', multiple=True, help='Port mappings')
-@click.argument('args', nargs=-1, type=UNPROCESSED)
-def main(env_files, non_interactive, keep, name, ports, args):
+@command(context_settings=dict(ignore_unknown_options=True))
+@option('-E', '--env-file', 'env_files', multiple=True, help='Environment files')
+@option('-I', '--non-interactive', is_flag=True, help='Non-interactive mode (disable passing `-it`)')
+@option('-k', '--keep', is_flag=True, help='Keep container after it exits (disable passing `--rm`)')
+@option('-n', '--name', help='Container name')
+@option('-p', '--port', 'ports', multiple=True, help='Port mappings')
+@option('-v', '--volume', 'volumes', multiple=True, help='Volume mappings; relative paths supported')
+@argument('args', nargs=-1, type=UNPROCESSED)
+def main(env_files, non_interactive, keep, name, ports, volumes, args):
     """`docker run` wrapper with some defaults and conveniences.
 
     By default:
@@ -73,6 +75,17 @@ def main(env_files, non_interactive, keep, name, ports, args):
 
     for env_file in env_files:
         cmd += ['-env-file', env_file]
+
+    for volume in volumes:
+        pcs = volume.split(':')
+        if len(pcs) != 2:
+            raise ValueError(f'Invalid volume mapping: {volume}')
+        src, dst = pcs
+        if src[0] != '/':
+            src = f'{getcwd()}/{src}'
+        if dst[-1] == "/":
+            dst += basename(src)
+        cmd += ['-v', f'{src}:{dst}']
 
     for port in ports:
         if fullmatch(r'\d+', port):
