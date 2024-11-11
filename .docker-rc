@@ -201,7 +201,7 @@ docker_stop() {
     all=1
     shift
     if [ $# -gt 0 ]; then
-      echo "Usage: $0 [-a | id...]" >&2
+      echo "Usage: ${FUNCNAME[0]} [-a | id...]" >&2
       exit 1
     fi
   fi
@@ -326,7 +326,7 @@ export -f dclh
 docker_image_copy() {
     # Adapted from https://stackoverflow.com/a/31316636
     if [ $# -ne 3 ]; then
-        echo "Usage: docker_image_copy <image> <src> <dst>" >&2
+        echo "Usage: ${FUNCNAME[0]} <image> <src> <dst>" >&2
         return 1
     fi
     img="$1"; shift
@@ -418,7 +418,7 @@ defn dkpa docker system prune -a
 
 docker_tags() {
     if [ $# -ne 1 ]; then
-        echo "Usage: docker_tags <img>" >&2
+        echo "Usage: ${FUNCNAME[0]} <img>" >&2
         return 1
     fi
     img="$1"; shift
@@ -429,7 +429,7 @@ defn dkts docker_tags
 
 docker_pull_shell() {
     if [ $# -ne 1 ]; then
-        echo "Usage: docker_pull_shell <img>" >&2
+        echo "Usage: ${FUNCNAME[0]} <img>" >&2
         return 1
     fi
     img="$1"; shift
@@ -467,7 +467,7 @@ docker_default_platform_set() {
     elif [ $# -eq 1 ]; then
         platform="$1"; shift
     else
-        echo "Usage: docker_default_platform [platform=linux/amd64]" >&2
+        echo "Usage: ${FUNCNAME[0]} [platform=linux/amd64]" >&2
         return 1
     fi
     if [ "$DOCKER_DEFAULT_PLATFORM" == "$platform" ]; then
