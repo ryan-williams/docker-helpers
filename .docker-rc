@@ -444,23 +444,34 @@ defn dpsh docker_pull_shell
 # From https://docs.docker.com/engine/install/ubuntu/
 # Assumes it's run as root
 install_docker_ubuntu() {
+    local sudo= usermod=
+    trap 'return 1' ERR
+    if [ "$USER" != root ]; then
+        sudo=sudo
+        usermod=1
+    fi
     # Add Docker's official GPG key:
-    apt-get update
-    apt-get install ca-certificates curl gnupg
-    install -m 0755 -d /etc/apt/keyrings
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-    chmod a+r /etc/apt/keyrings/docker.gpg
+    $sudo apt-get update -y
+    $sudo apt-get install -y ca-certificates curl gnupg
+    $sudo install -m 0755 -d /etc/apt/keyrings
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | $sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+    $sudo chmod a+r /etc/apt/keyrings/docker.gpg
 
     # Add the repository to Apt sources:
     echo \
       "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
       "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
-      tee /etc/apt/sources.list.d/docker.list > /dev/null
-    apt-get update
+      $sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
-    apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    $sudo apt-get update -y
+    $sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
-    docker run hello-world
+    $sudo docker run hello-world
+
+    if [ -n "$usermod" ]; then
+        sudo usermod -aG docker "$USER"
+        echo "Log out and back in to register $USER as a member of group \"docker\"" >&2
+    fi
 }
 
 docker_default_platform_set() {
