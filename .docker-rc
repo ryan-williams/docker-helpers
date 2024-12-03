@@ -363,6 +363,8 @@ defn adl aws_ecr_docker_login
 defn ddsc python docker_descendents.py
 defn mdi make-dockerignore.py
 
+defn dkb docker build
+defn dbt docker-build.py -t
 defn dbd docker-build.py
 defn dbf docker-build.py
 defn dbu docker-build.py
