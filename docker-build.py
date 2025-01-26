@@ -7,21 +7,21 @@ from os.path import basename, exists
 from subprocess import check_call as run
 from sys import stderr
 
-import click
-from click import UNPROCESSED
+from click import UNPROCESSED, argument, command, option
 
 
 def err(msg):
     stderr.write(f'{msg}\n')
 
 
-@click.command(context_settings=dict(ignore_unknown_options=True))
-@click.option('-a', '--build-arg', 'build_args', multiple=True, help='Build arguments')
-@click.option('-d', '--build-dir', help='Build "context" directory')
-@click.option('-f', '--dockerfile', help='Dockerfile path')
-@click.option('-t', '--tag', help='Image tag')
-@click.argument('args', nargs=-1, type=UNPROCESSED)
-def main(build_args, build_dir, dockerfile, tag, args):
+@command(context_settings=dict(ignore_unknown_options=True))
+@option('-a', '--build-arg', 'build_args', multiple=True, help='Build arguments')
+@option('-d', '--build-dir', help='Build "context" directory')
+@option('-f', '--dockerfile', help='Dockerfile path')
+@option('-s', '--silent', is_flag=True, help='Suppress build logs')
+@option('-t', '--tag', help='Image tag')
+@argument('args', nargs=-1, type=UNPROCESSED)
+def main(build_args, build_dir, dockerfile, silent, tag, args):
     if not dockerfile:
         if args:
             *args, dockerfile = args
@@ -52,12 +52,15 @@ def main(build_args, build_dir, dockerfile, tag, args):
 
     build_dir = build_dir or '.'
     cmd = [
-        'docker', 'build', '-f', dockerfile, '-t', tag,
+        'docker', 'build',
+        '-f', dockerfile,
+        '-t', tag,
+        *([] if silent else ['--progress=plain']),
         *[
             arg
             for build_arg in build_args
             for arg in ['--build-arg', build_arg]
-         ],
+        ],
         *args,
         build_dir,
     ]
