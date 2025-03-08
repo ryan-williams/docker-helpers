@@ -475,10 +475,16 @@ install_docker_ubuntu() {
 }
 
 docker_default_platform_set() {
+    local platform
     if [ $# -eq 0 ]; then
         platform=linux/amd64
     elif [ $# -eq 1 ]; then
         platform="$1"; shift
+        if [ "$platform" = arm ]; then
+            platform=linux/arm64
+        elif [ "$platform" = amd ]; then
+            platform=linux/amd64
+        fi
     else
         echo "Usage: ${FUNCNAME[0]} [platform=linux/amd64]" >&2
         return 1
