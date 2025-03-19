@@ -35,8 +35,16 @@ def main(build_args, build_dir, dockerfile, silent, tag, args):
                 else:
                     raise RuntimeError(f"Couldn't find Dockerfile or single *.dockerfile ({dockerfiles})")
 
+    if ':' in dockerfile:
+        dockerfile0 = dockerfile
+        tag0 = tag
+        dockerfile, tag = dockerfile.split(':', 1)
+        if tag0 and tag0 != tag:
+            raise ValueError(f"-t/--tag {tag0} doesn't match tag from {dockerfile0}")
+        tag = f"{dockerfile}:{tag}"
     if dockerfile != 'Dockerfile' and not dockerfile.endswith('.dockerfile'):
         dockerfile = f'{dockerfile}.dockerfile'
+
     if not exists(dockerfile):
         raise FileNotFoundError(f"Couldn't find {dockerfile}")
 
