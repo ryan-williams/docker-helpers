@@ -202,7 +202,7 @@ docker_stop() {
     shift
     if [ $# -gt 0 ]; then
       echo "Usage: ${FUNCNAME[0]} [-a | id...]" >&2
-      exit 1
+      return 1
     fi
   fi
   if [ $# -gt 0 ]; then
