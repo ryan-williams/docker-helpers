@@ -447,6 +447,7 @@ install_docker_ubuntu() {
     local sudo= usermod=
     trap 'return 1' ERR
     if [ "$USER" != root ]; then
+        echo "Detected non-root user, prepending \"sudo \" to commands" >&2
         sudo=sudo
         usermod=1
     fi
@@ -469,7 +470,7 @@ install_docker_ubuntu() {
     $sudo docker run hello-world
 
     if [ -n "$usermod" ]; then
-        sudo usermod -aG docker "$USER"
+        $sudo usermod -aG docker "$USER"
         echo "Log out and back in to register $USER as a member of group \"docker\"" >&2
     fi
 }
