@@ -446,7 +446,7 @@ defn dpsh docker_pull_shell
 install_docker_ubuntu() {
     local sudo= usermod=
     trap 'return 1' ERR
-    if [ "$USER" != root ]; then
+    if [ "$USER" != root ] && [ "$(whoami)" != root ]; then
         echo "Detected non-root user, prepending \"sudo \" to commands" >&2
         sudo=sudo
         usermod=1
