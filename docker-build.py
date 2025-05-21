@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
 import re
+import shlex
+from functools import partial
 from glob import glob
 from os import getcwd
 from os.path import basename, exists
@@ -10,8 +12,7 @@ from sys import stderr
 from click import UNPROCESSED, argument, command, option
 
 
-def err(msg):
-    stderr.write(f'{msg}\n')
+err = partial(print, file=stderr)
 
 
 @command(context_settings=dict(ignore_unknown_options=True))
@@ -72,7 +73,7 @@ def main(build_args, build_dir, dockerfile, silent, tag, args):
         *args,
         build_dir,
     ]
-    err(f'Running: {cmd}')
+    err(f'Running: {shlex.join(cmd)}')
     run(cmd)
 
 
